@@ -26,5 +26,6 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('get_reset_data/', get_reset_data, name='get_reset_data'),
-    
+    path('send_reset_code/', SendResetCodeView.as_view(), name='send_reset_code'),
+    path('verify_reset_code/', VerifyResetCodeView.as_view(), name='verify_reset_code'),
 ]

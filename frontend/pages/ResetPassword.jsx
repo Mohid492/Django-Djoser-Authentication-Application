@@ -12,34 +12,16 @@ const ResetPassword = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8000/auth/users/reset_password/', { email });
-      if (response.status === 204) {
-        // Automatically fetch UID and token
-        const resetData = await fetchResetData(email);
-
-        if (resetData && resetData.uid && resetData.token) {
-          navigate(`/reset-password-confirm/${resetData.uid}/${resetData.token}`); // Redirect to confirmation page
-        } else {
-          setError('Failed to get reset link.');
-        }
+      const response = await axios.post('http://localhost:8000/send_reset_code/', { email });
+      if (response.status === 200) {
+        navigate(`/verify-reset-code/${email}`); // Redirect to verification page
       } else {
-        setError('An error occurred.');
+        setError('Failed to send reset code.');
       }
     } catch (error) {
       setError('An error occurred while processing the password reset request.');
     }
   };
-
-  const fetchResetData = async (email) => {
-    try {
-      const response = await axios.get(`http://localhost:8000/get_reset_data/?email=${email}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching reset data:", error); // Log for debugging
-      return null; // Indicate failure
-    }
-  };
-
 
   return (
     <div className="container mt-5">
@@ -58,7 +40,7 @@ const ResetPassword = () => {
         </Form.Group>
 
         <Button variant="primary" type="submit">
-          Reset Password
+          Send Reset Code
         </Button>
       </Form>
     </div>

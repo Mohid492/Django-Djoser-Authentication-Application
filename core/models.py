@@ -1,3 +1,6 @@
+from datetime import datetime, timedelta
+from django.utils import timezone
+
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
@@ -71,3 +74,16 @@ class User(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+# Password Reset Code Model
+class PasswordResetCode(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='password_reset_code')
+    code = models.CharField(max_length=5)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_valid(self):
+        # Compare aware datetimes
+        return self.created_at >= timezone.now() - timedelta(minutes=15)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.code}"
