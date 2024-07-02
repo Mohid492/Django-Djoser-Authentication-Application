@@ -1,0 +1,29 @@
+{% load i18n %}
+
+{% block subject %}
+{% blocktrans %}Email reset on {{ site_name }}{% endblocktrans %}
+{% endblock subject %}
+
+{% block text_body %}
+{% blocktrans %}You're receiving this email because you requested a email reset for your user account at {{ site_name }}.{% endblocktrans %}
+
+{% trans "Please go to the following page and choose a new email:" %}
+{{ protocol }}://{{ domain }}/{{ url|safe }}
+{% trans "Your username, in case you've forgotten:" %} {{ user.get_username }}
+
+{% endblock text_body %}
+
+{% block html_body %}
+<p>{% blocktrans %}You're receiving this email because you requested a email reset for your user account at {{ site_name }}.{% endblocktrans %}</p>
+<span>Follow us: </span>
+<div style="display: flex; justify-content: center; align-items: center;">
+  
+  <a href="www.linkedin.com/in/mohid-kashif-6259a32b0" style="margin: 5px; padding: 5px ; border-radius: 10%; background-color: #0077B5; color: white; text-decoration: none; font-size:10px">
+    LinkedIn
+  </a>
+  
+</div>
+
+<i>{% blocktrans %}If you face difficulties in resetting account password kindly contact us on: mohidkashif.dev@gmail.com {% endblocktrans %}</i>
+
+{% endblock html_body %}
