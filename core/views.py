@@ -1,16 +1,26 @@
+from django.forms import ValidationError
 from django.http import JsonResponse
+from django.contrib.auth import authenticate
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth import get_user_model
-from rest_framework.permissions import AllowAny
-from rest_framework import status, generics
+from rest_framework.permissions import AllowAny,IsAuthenticated
+from rest_framework import status
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from .serializers import PasswordResetCodeSerializer, VerifyPasswordResetCodeSerializer
+from rest_framework.decorators import api_view, permission_classes  # Add this line
+from .serializers import PasswordResetCodeSerializer, UserSerializer, VerifyPasswordResetCodeSerializer
 from django.core.mail import send_mail
+from rest_framework.exceptions import AuthenticationFailed
 from django.conf import settings
-from . import models
-#from .utils import send_reset_code_email
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from .models import *
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 
 User = get_user_model()
 
@@ -25,7 +35,7 @@ def get_reset_data(request):
     except User.DoesNotExist:
         return JsonResponse({'error': 'User not found'}, status=404)
 
-class SendResetCodeView(generics.GenericAPIView):
+class SendResetCodeView(GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = PasswordResetCodeSerializer
 
@@ -45,22 +55,8 @@ class SendResetCodeView(generics.GenericAPIView):
         
         return Response({"detail": "Password reset code sent."}, status=status.HTTP_200_OK)
 
-# class VerifyResetCodeView(generics.GenericAPIView):
-#     permission_classes = [AllowAny]
-#     serializer_class = VerifyPasswordResetCodeSerializer
 
-#     def post(self, request, *args, **kwargs):
-#         print('Received data:', request.data)  # Debugging
-#         serializer = self.get_serializer(data=request.data)
-#         if serializer.is_valid():
-#             return Response({"detail": "Code verified."}, status=status.HTTP_200_OK)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-# views.py
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-
-class VerifyResetCodeView(generics.GenericAPIView):
+class VerifyResetCodeView(GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = VerifyPasswordResetCodeSerializer
 
@@ -72,3 +68,4 @@ class VerifyResetCodeView(generics.GenericAPIView):
             token = default_token_generator.make_token(user)
             return Response({"uid": uid, "token": token}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

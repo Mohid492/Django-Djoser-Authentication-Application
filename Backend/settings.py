@@ -163,31 +163,26 @@ SIMPLE_JWT = {
 }
 
 DJOSER = {
-
+    'DOMAIN':'localhost:8000',
     'LOGIN_FIELD': 'email',
     'USER_CREATE_PASSWORD_RETYPE':True,
     'SEND_CONFIRMATION_EMAIL':True,
     'PASSWORD_CHANGED_EMAIL_CONFIRMATION':True,
-   "USERNAME_RESET_CONFIRM_URL": "reset-email/{uid}/{token}",  # Frontend URL for email reset confirmation
    "PASSWORD_RESET_CONFIRM_URL": "password-reset/{uid}/{token}",
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
-    'USERNAME_CHANGED_EMAIL_CONFIRMATION':True,
-    'USERNAME_RESET_SHOW_EMAIL_NOT_FOUND':True,
-    'TOKEN_MODEL': None,       # To Delete User Must Set it to None
+    'TOKEN_MODEL': None,   
     'SERIALIZERS':{
         'user_create': 'core.serializers.UserCreateSerializer',
-        'user': 'core.serializers.UserCreateSerializer',
+        'user': 'core.serializers.UserSerializer',
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
+         'user_email': 'djoser.serializers.UserEmailSerializer',
     },
     'EMAIL': {
         'confirmation': 'core.email.ConfirmationEmail',
         'password_reset': 'core.email.PasswordResetEmail',
         'password_changed_confirmation': 'core.email.PasswordChangedConfirmationEmail',
-       'username_reset': 'core.email.UsernameResetEmail',
-        'username_changed_confirmation': 'core.email.UsernameChangedConfirmationEmail',
     },
-
 }
 
 CORS_ORIGIN_ALLOW_ALL = True 

@@ -12,8 +12,3 @@ class PasswordResetEmail(email.PasswordResetEmail):
 class PasswordChangedConfirmationEmail(email.PasswordChangedConfirmationEmail):
     template_name = 'account/password_changed_confirmation.html'
 
-class UsernameResetEmail(email.UsernameResetEmail):
-    template_name = 'account/username_reset.html'
-
-class UsernameChangedConfirmationEmail(email.UsernameChangedConfirmationEmail):
-    template_name = 'account/username_changed_confirmation.html'

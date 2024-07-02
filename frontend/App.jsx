@@ -5,8 +5,8 @@ import LoginForm from './pages/LoginForm';
 import Home from './pages/Home';
 import ResetPasswordConfirm from './pages/ResetPasswordConfirm';
 import ResetPassword from './pages/ResetPassword';
-import ResetEmail from './pages/ResetEmail';
 import VerifyResetCode from './pages/VerifyResetCode';
+
 
 function App() {
   return (
@@ -18,7 +18,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/reset-password-confirm/:uid/:token" element={<ResetPasswordConfirm />} />
-          <Route path="/reset-email" element={<ResetEmail />} />
           <Route path="/verify-reset-code/:email" element={<VerifyResetCode />} />
         </Routes>
       </div>

@@ -1,15 +1,20 @@
-from djoser.serializers import UserCreateSerializer
+from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer,UserSerializer as BaseUserSerializer
 from .models import *
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 import random
 
-class UserCreateSerializer(UserCreateSerializer):
-    class Meta(UserCreateSerializer.Meta):
+User = get_user_model()
+
+class UserCreateSerializer(BaseUserCreateSerializer):
+    class Meta(BaseUserCreateSerializer.Meta):
         model=User
         fields=('id', 'email', 'name', 'password')
 
-User = get_user_model()
+class UserSerializer(BaseUserSerializer):
+    class Meta(BaseUserSerializer.Meta):
+        model=User
+        fields=('id', 'email', 'name')
 
 class PasswordResetCodeSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -28,8 +33,6 @@ class PasswordResetCodeSerializer(serializers.Serializer):
         PasswordResetCode.objects.update_or_create(user=user, defaults={'code': code})
         return code
 
-# core/serializers.py
-# serializers.py
 class VerifyPasswordResetCodeSerializer(serializers.Serializer):
     email = serializers.EmailField()
     code = serializers.CharField(max_length=6)
